@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Stage</title>
+  
+  <!-- IBM Plex Sans Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"IBM Plex Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      font-family: 'IBM Plex Sans', sans-serif;
+    }
+
+    /* Strict word-wrap without hyphenating or breaking words across lines */
+    .essay-content {
+      text-align: justify;
+      text-justify: inter-word;
+      hyphens: none;
+      -webkit-hyphens: none;
+      -ms-hyphens: none;
+      word-break: normal;
+      overflow-wrap: break-word;
+    }
+
+    /* Keyframe Animations for the SVG Artwork */
+    @keyframes beltMovement {
+      0% { stroke-dashoffset: 0; }
+      100% { stroke-dashoffset: -80; }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.6; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.1); }
+    }
+
+    @keyframes beamSweep {
+      0%, 100% { opacity: 0.45; transform: rotate(-2deg); }
+      50% { opacity: 0.85; transform: rotate(2.5deg); }
+    }
+
+    @keyframes floatGentle {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-7px); }
+    }
+
+    @keyframes shimmerStream {
+      0% { stroke-dashoffset: 200; }
+      100% { stroke-dashoffset: 0; }
+    }
+
+    .anim-belt {
+      stroke-dasharray: 10, 10;
+      animation: beltMovement 2.2s linear infinite;
+    }
+
+    .anim-spark {
+      transform-origin: 320px 225px;
+      animation: pulseGlow 2.8s ease-in-out infinite;
+    }
+
+    .anim-spotlight {
+      transform-origin: 320px 20px;
+      animation: beamSweep 6s ease-in-out infinite;
+    }
+
+    .anim-floating {
+      animation: floatGentle 4.5s ease-in-out infinite;
+    }
+
+    .anim-stream {
+      stroke-dasharray: 12, 14;
+      animation: shimmerStream 4s linear infinite;
+    }
+
+    /* Custom Toast Transition */
+    .toast-enter {
+      opacity: 0;
+      transform: translate(-50%, 1rem);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .toast-show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen transition-colors duration-500 ease-out selection:bg-amber-400 selection:text-slate-900">
+
+  <div class="fixed top-4 right-4 sm:top-6 sm:right-6 z-50 flex items-center gap-2.5">
+    <!-- Theme Toggle Button -->
+    <button 
+      id="themeToggleBtn"
+      type="button"
+      aria-label="Toggle theme"
+      class="p-2.5 sm:p-3 rounded-full bg-slate-800/80 dark:bg-slate-800/90 text-slate-200 border border-slate-700/60 shadow-lg backdrop-blur-md hover:bg-slate-700/80 active:scale-95 transition-all duration-200"
+    >
+      <!-- Sun icon (shown in dark mode) -->
+      <svg id="sunIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+          d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+      </svg>
+      <!-- Moon icon (shown in light mode) -->
+      <svg id="moonIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+          d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+      </svg>
+    </button>
+
+    <!-- Share Button -->
+    <button 
+      id="shareBtn"
+      type="button"
+      aria-label="Share page"
+      class="p-2.5 sm:p-3 rounded-full bg-slate-800/80 dark:bg-slate-800/90 text-slate-200 border border-slate-700/60 shadow-lg backdrop-blur-md hover:bg-slate-700/80 active:scale-95 transition-all duration-200"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+          d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+      </svg>
+    </button>
+  </div>
+
+  <main class="w-full max-w-3xl mx-auto px-5 sm:px-8 py-14 sm:py-20 flex flex-col items-center">
+    
+    <!-- Title -->
+    <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-center text-slate-900 dark:text-slate-100 mb-8 sm:mb-12">
+      A Stage
+    </h1>
+
+    <div class="w-full max-w-2xl my-2 sm:my-4 rounded-2xl overflow-hidden shadow-2xl border border-slate-200/80 dark:border-slate-800/80 bg-slate-900/60 transition-all duration-300">
+      <svg 
+        viewBox="0 0 640 380" 
+        class="w-full h-auto block select-none" 
+        xmlns="http://www.w3.org/2000/svg"
+        role="img"
+        aria-label="Cosmic Stage representation with the conveyor belt of Time and an aware actor"
+      >
+        <defs>
+          <!-- Deep Universal Stage Backdrop Gradient -->
+          <radialGradient id="spaceGlow" cx="50%" cy="35%" r="75%">
+            <stop offset="0%" stop-color="#1e1b4b"/>
+            <stop offset="55%" stop-color="#0f172a"/>
+            <stop offset="100%" stop-color="#020617"/>
+          </radialGradient>
+
+          <!-- Spotlight Beam Gradient -->
+          <linearGradient id="spotBeam" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#fef08a" stop-opacity="0.65"/>
+            <stop offset="60%" stop-color="#f59e0b" stop-opacity="0.22"/>
+            <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.0"/>
+          </linearGradient>
+
+          <!-- Velvet Stage Drapes Gradient -->
+          <linearGradient id="drapes" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#831843"/>
+            <stop offset="25%" stop-color="#be185d"/>
+            <stop offset="50%" stop-color="#9d174d"/>
+            <stop offset="75%" stop-color="#db2777"/>
+            <stop offset="100%" stop-color="#700733"/>
+          </linearGradient>
+
+          <!-- Belt of TIME Gradient -->
+          <linearGradient id="timeBeltGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#06b6d4"/>
+            <stop offset="35%" stop-color="#3b82f6"/>
+            <stop offset="70%" stop-color="#8b5cf6"/>
+            <stop offset="100%" stop-color="#ec4899"/>
+          </linearGradient>
+
+          <!-- Actor Awareness Halo Gradient -->
+          <radialGradient id="sparkHalo" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="35%" stop-color="#38bdf8"/>
+            <stop offset="75%" stop-color="#6366f1" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="#6366f1" stop-opacity="0"/>
+          </radialGradient>
+
+          <!-- Stage Flooring Gradient -->
+          <linearGradient id="stageFloor" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#312e81"/>
+            <stop offset="40%" stop-color="#1e1b4b"/>
+            <stop offset="100%" stop-color="#090d16"/>
+          </linearGradient>
+
+          <!-- Filter for Glow Effects -->
+          <filter id="glowEffect" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="4" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+          </filter>
+        </defs>
+
+        <!-- Universe Background -->
+        <rect width="640" height="380" fill="url(#spaceGlow)"/>
+
+        <!-- Distant Constellations / Background Sparkles -->
+        <g opacity="0.6">
+          <circle cx="95" cy="55" r="1.5" fill="#f8fafc"/>
+          <circle cx="170" cy="85" r="1" fill="#cbd5e1"/>
+          <circle cx="240" cy="40" r="1.5" fill="#e0f2fe"/>
+          <circle cx="430" cy="65" r="1" fill="#fef08a"/>
+          <circle cx="530" cy="45" r="1.8" fill="#e0e7ff"/>
+          <circle cx="585" cy="115" r="1.2" fill="#cbd5e1"/>
+          <circle cx="70" cy="140" r="1.2" fill="#bae6fd"/>
+          <circle cx="500" cy="135" r="1" fill="#fbcfe8"/>
+        </g>
+
+        <!-- Nested Cosmic Stages (Humanity > Nations > Towns > Communities > Homes > Families) -->
+        <g opacity="0.32">
+          <!-- Humanity Ring -->
+          <ellipse cx="320" cy="275" rx="285" ry="55" fill="none" stroke="#60a5fa" stroke-width="1.2" stroke-dasharray="4, 4"/>
+          <!-- Nations Ring -->
+          <ellipse cx="320" cy="275" rx="245" ry="46" fill="none" stroke="#818cf8" stroke-width="1" stroke-dasharray="3, 3"/>
+          <!-- Towns Ring -->
+          <ellipse cx="320" cy="275" rx="205" ry="38" fill="none" stroke="#a78bfa" stroke-width="1"/>
+          <!-- Communities Ring -->
+          <ellipse cx="320" cy="275" rx="165" ry="30" fill="none" stroke="#c084fc" stroke-width="1" stroke-dasharray="5, 3"/>
+          <!-- Homes Ring -->
+          <ellipse cx="320" cy="275" rx="125" ry="22" fill="none" stroke="#e879f9" stroke-width="1.2"/>
+          <!-- Families Ring -->
+          <ellipse cx="320" cy="275" rx="85" ry="15" fill="none" stroke="#f472b6" stroke-width="1.2"/>
+        </g>
+
+        <!-- Flowing Time Energy Stream Particles -->
+        <path d="M 40 270 C 140 295, 230 255, 320 275 C 410 295, 500 255, 600 270" fill="none" stroke="#38bdf8" stroke-width="1.5" opacity="0.4" class="anim-stream"/>
+        <path d="M 50 282 C 150 305, 240 268, 320 280 C 420 298, 510 265, 590 282" fill="none" stroke="#ec4899" stroke-width="1" opacity="0.35" class="anim-stream"/>
+
+        <!-- Main Stage Platform -->
+        <path d="M 70 295 L 570 295 L 530 330 L 110 330 Z" fill="url(#stageFloor)" stroke="#475569" stroke-width="1"/>
+
+        <!-- The Ever-Running Belt of TIME -->
+        <g id="timeBeltGroup">
+          <!-- Belt track base -->
+          <rect x="75" y="322" width="490" height="26" rx="13" fill="#020617" stroke="#334155" stroke-width="1.5"/>
+          <!-- Belt moving dashes symbolizing unidirectional movement forward -->
+          <line x1="90" y1="335" x2="550" y2="335" stroke="url(#timeBeltGrad)" stroke-width="5" stroke-linecap="round" class="anim-belt"/>
+          
+          <!-- Belt Rollers / Gears -->
+          <circle cx="95" cy="335" r="9" fill="#1e293b" stroke="#38bdf8" stroke-width="1.8"/>
+          <circle cx="95" cy="335" r="3" fill="#67e8f9"/>
+          <circle cx="545" cy="335" r="9" fill="#1e293b" stroke="#f43f5e" stroke-width="1.8"/>
+          <circle cx="545" cy="335" r="3" fill="#fda4af"/>
+          
+          <!-- Time Belt Arrow Indicators (Always moving ahead) -->
+          <path d="M 525 331 L 533 335 L 525 339" fill="none" stroke="#fda4af" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+
+        <!-- Spotlight Beaming from High Universal Canopy onto Centerstage -->
+        <polygon points="320,10 210,295 430,295" fill="url(#spotBeam)" class="anim-spotlight" style="mix-blend-mode: screen;"/>
+
+        <!-- The Actor Figure in Role Play -->
+        <g id="actorFigure" class="anim-floating">
+          <!-- Actor Body Silhouette -->
+          <path d="M 320 206 C 314 206 309 211 308 217 L 305 250 C 305 256 312 258 316 258 L 324 258 C 328 258 335 256 335 250 L 332 217 C 331 211 326 206 320 206 Z" fill="#0f172a" stroke="#cbd5e1" stroke-width="1.5"/>
+          
+          <!-- Actor Head -->
+          <circle cx="320" cy="194" r="9.5" fill="#1e293b" stroke="#cbd5e1" stroke-width="1.5"/>
+
+          <!-- Glowing Spark of Conscious Self-Awareness in the Actor's Core -->
+          <circle cx="320" cy="226" r="14" fill="url(#sparkHalo)" filter="url(#glowEffect)" class="anim-spark"/>
+          <circle cx="320" cy="226" r="4.5" fill="#ffffff" class="anim-spark"/>
+        </g>
+
+        <!-- Floating Theatrical Masks (Subtle symbols of impromptu role-playing) -->
+        <g opacity="0.38" transform="translate(185, 175) scale(0.7)" class="anim-floating">
+          <!-- Comedy Mask Outline -->
+          <path d="M 20 25 C 20 15 35 10 45 10 C 55 10 70 15 70 25 C 70 45 60 55 45 55 C 30 55 20 45 20 25 Z" fill="none" stroke="#38bdf8" stroke-width="2"/>
+          <circle cx="35" cy="26" r="2.5" fill="#38bdf8"/>
+          <circle cx="55" cy="26" r="2.5" fill="#38bdf8"/>
+          <path d="M 35 38 Q 45 48 55 38" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/>
+        </g>
+
+        <g opacity="0.38" transform="translate(425, 175) scale(0.7)" class="anim-floating">
+          <!-- Contemplation Mask Outline -->
+          <path d="M 20 25 C 20 15 35 10 45 10 C 55 10 70 15 70 25 C 70 45 60 55 45 55 C 30 55 20 45 20 25 Z" fill="none" stroke="#ec4899" stroke-width="2"/>
+          <circle cx="35" cy="26" r="2.5" fill="#ec4899"/>
+          <circle cx="55" cy="26" r="2.5" fill="#ec4899"/>
+          <path d="M 35 44 Q 45 35 55 44" fill="none" stroke="#ec4899" stroke-width="2" stroke-linecap="round"/>
+        </g>
+
+        <!-- Grand Velvet Proscenium / Stage Drapes -->
+        <!-- Top Swag -->
+        <path d="M 0 0 L 640 0 L 640 42 C 540 28, 440 50, 320 32 C 200 50, 100 28, 0 42 Z" fill="url(#drapes)"/>
+        <!-- Left Curtain -->
+        <path d="M 0 0 L 72 0 C 60 110, 85 200, 24 350 L 0 350 Z" fill="url(#drapes)" opacity="0.95"/>
+        <!-- Right Curtain -->
+        <path d="M 640 0 L 568 0 C 580 110, 555 200, 616 350 L 640 350 Z" fill="url(#drapes)" opacity="0.95"/>
+        <!-- Stage Frame Edge Highlights -->
+        <path d="M 0 0 L 72 0 C 60 110, 85 200, 24 350" fill="none" stroke="#fda4af" stroke-width="1" opacity="0.4"/>
+        <path d="M 640 0 L 568 0 C 580 110, 555 200, 616 350" fill="none" stroke="#fda4af" stroke-width="1" opacity="0.4"/>
+      </svg>
+    </div>
+
+    <article class="w-full mt-10 space-y-6 text-base sm:text-lg leading-relaxed sm:leading-loose text-slate-800 dark:text-slate-200 essay-content">
+      <p>
+        Life in the entire universe is like an ever-continuous stage performance. Always live. Happening. This vast ‘stage’ is subdivided into so many small stages. These can be broadly classified as entire humanity &gt; nations &gt; towns &gt; communities &gt; homes &gt; families…
+      </p>
+
+      <p>
+        On each such ‘stage’, every performance is a live performance. Impromptu. Unrehearsed. In fact, rehearsal is NOT possible. The actors thereupon continue to, rather have to perform from the moment they enter into their respective role till the time they exit.
+      </p>
+
+      <p>
+        The irony is - any individual actor simply cannot decide on his/her respective entry or exit timing. Not only that it is also not possible to choose the stage, co-actors, supporting actors, unknown actors, everything else and their respective acts, roles and performances; nothing. Whatever it is, it is.
+      </p>
+
+      <p>
+        Here, every individual actor has to act, no choice; because ultimately this entire ‘universal life stage’ is on an ever-running belt called TIME. Always moving ahead. Thus, an act once performed is performed. No backward correction is ever possible.
+      </p>
+
+      <p>
+        All the above may sound depressing. But it is not that ruthless.
+      </p>
+
+      <p>
+        If, during the course of play, any individual actor identifies, realises and understands ‘what’ went wrong for him/her, then he/she can do some ‘conscious fine tuning’ whenever, in future, the role demands to act in somewhat similar circumstances. This may also be deciding not to act at all, at that point of time. The earlier the understanding is, the better it is.
+      </p>
+
+      <p>
+        So, the only thing that is in the hand of the individual actor to keep his/her own performance as easy-going and stress free as possible is ‘awareness’. Because on this ever-moving-forward-in-time stage, only an aware actor can make ‘Suo-motu’ corrections in his/her role-play based on OWN experiences that are gathered by just ‘being aware’. Again, all this can be done ONLY for the role-playing of self. Not for others.
+      </p>
+
+      <p>
+        So, it is the ‘self-awareness’ that matters. And the easiest way to increase it is to adhere to ‘healthy habits’ as wholeheartedly as one can.
+      </p>
+
+      <p class="text-right pt-6 text-sm sm:text-base font-medium text-slate-600 dark:text-slate-400">
+        ~ Jaydeep | 8 March 2024
+      </p>
+    </article>
+
+  </main>
+
+  <div 
+    id="toast" 
+    class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 pointer-events-none px-4 py-2.5 rounded-xl bg-slate-900/90 dark:bg-slate-100/90 text-white dark:text-slate-900 text-sm font-medium shadow-xl backdrop-blur-md transition-all duration-300 opacity-0 translate-y-3"
+  >
+    <span id="toastMsg">Link copied to clipboard</span>
+  </div>
+
+  <script>
+    (function () {
+      // Elements
+      const htmlEl = document.documentElement;
+      const themeToggleBtn = document.getElementById('themeToggleBtn');
+      const sunIcon = document.getElementById('sunIcon');
+      const moonIcon = document.getElementById('moonIcon');
+      const shareBtn = document.getElementById('shareBtn');
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      let toastTimeout = null;
+
+      // Show Toast Notification
+      function showToast(message) {
+        if (toastTimeout) clearTimeout(toastTimeout);
+        toastMsg.textContent = message;
+        toast.classList.remove('opacity-0', 'translate-y-3');
+        toast.classList.add('opacity-100', 'translate-y-0');
+        
+        toastTimeout = setTimeout(() => {
+          toast.classList.remove('opacity-100', 'translate-y-0');
+          toast.classList.add('opacity-0', 'translate-y-3');
+        }, 2600);
+      }
+
+      // Theme Management
+      function updateThemeIcons(isDark) {
+        if (isDark) {
+          sunIcon.classList.remove('hidden');
+          moonIcon.classList.add('hidden');
+          document.body.classList.remove('bg-amber-50/40', 'text-slate-900');
+          document.body.classList.add('bg-slate-950', 'text-slate-100');
+        } else {
+          sunIcon.classList.add('hidden');
+          moonIcon.classList.remove('hidden');
+          document.body.classList.remove('bg-slate-950', 'text-slate-100');
+          document.body.classList.add('bg-amber-50/40', 'text-slate-900');
+        }
+      }
+
+      // Initialize Theme
+      const savedTheme = localStorage.getItem('theme');
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initialDark = savedTheme ? savedTheme === 'dark' : systemPrefersDark;
+
+      if (initialDark) {
+        htmlEl.classList.add('dark');
+      } else {
+        htmlEl.classList.remove('dark');
+      }
+      updateThemeIcons(initialDark);
+
+      // Theme Toggle Click
+      themeToggleBtn.addEventListener('click', () => {
+        const isDark = htmlEl.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        updateThemeIcons(isDark);
+      });
+
+      // Share Logic
+      shareBtn.addEventListener('click', async () => {
+        const shareData = {
+          title: 'A Stage',
+          text: 'Life in the entire universe is like an ever-continuous stage performance...',
+          url: window.location.href
+        };
+
+        if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+          try {
+            await navigator.share(shareData);
+          } catch (err) {
+            if (err.name !== 'AbortError') {
+              copyToClipboard(window.location.href);
+            }
+          }
+        } else {
+          copyToClipboard(window.location.href);
+        }
+      });
+
+      // Safe Clipboard Copying Fallback
+      function copyToClipboard(text) {
+        try {
+          const tempInput = document.createElement('textarea');
+          tempInput.value = text;
+          tempInput.style.position = 'fixed';
+          tempInput.style.left = '-9999px';
+          tempInput.style.top = '0';
+          document.body.appendChild(tempInput);
+          tempInput.focus();
+          tempInput.select();
+          const successful = document.execCommand('copy');
+          document.body.removeChild(tempInput);
+
+          if (successful) {
+            showToast('Link copied to clipboard');
+          } else {
+            showToast('Unable to copy link');
+          }
+        } catch (e) {
+          showToast('Unable to copy link');
+        }
+      }
+    })();
+  </script>
+</body>
+</html>
