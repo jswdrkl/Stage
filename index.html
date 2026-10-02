@@ -1,465 +1,423 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>A Stage</title>
-  
-  <!-- Google Fonts: Edu QLD Beginner (Edu QLD Hand style) & Inter for UI buttons -->
+  <!-- Google Fonts: Edu QLD Hand -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Edu+QLD+Beginner:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Edu+QLD+Beginner:wght@400;500;600;700&display=swap" rel="stylesheet">
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
           fontFamily: {
-            hand: ['"Edu QLD Beginner"', '"Edu QLD Hand"', 'cursive', 'system-ui', 'sans-serif'],
-            sans: ['Inter', 'sans-serif'],
+            hand: ['"Edu QLD Beginner"', 'cursive', 'sans-serif'],
           },
           colors: {
-            parchment: '#faf7ee',
-            ink: '#1f2421',
-            midnight: '#0c0f17',
-            moonlight: '#e9edf0'
+            page: {
+              light: '#fbf9f4',
+              cardLight: '#ffffff',
+              dark: '#141416',
+              cardDark: '#1d1e22',
+            }
           }
         }
       }
-    }
+    };
   </script>
-
   <style>
-    /* Ensure typography follows strict rules without broken words */
-    .prose-content p {
-      text-align: justify;
+    * {
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    body {
+      font-family: 'Edu QLD Beginner', cursive, sans-serif;
+      overflow-x: hidden;
       hyphens: none;
       -webkit-hyphens: none;
-      -ms-hyphens: none;
       word-break: normal;
-      overflow-wrap: normal;
-      line-height: 1.85;
-      letter-spacing: 0.015em;
+      overflow-wrap: break-word;
+      transition: background-color 0.4s ease, color 0.4s ease;
     }
 
-    .centered-element {
+    .body-content-justified {
+      text-align: justify;
+      text-justify: inter-word;
+      hyphens: none;
+      -webkit-hyphens: none;
+      word-break: normal;
+      overflow-wrap: break-word;
+    }
+
+    .body-content-centered {
       text-align: center;
+      hyphens: none;
+      -webkit-hyphens: none;
+      word-break: normal;
     }
 
-    /* Animated stage lighting and curtains */
+    /* Subtle theater stage animations for the title graphic */
     @keyframes spotlightGlow {
       0%, 100% {
-        opacity: 0.55;
-        transform: scale(1) rotate(0deg);
+        opacity: 0.45;
+        transform: rotate(-12deg) scale(1);
       }
       50% {
-        opacity: 0.85;
-        transform: scale(1.05) rotate(1.5deg);
+        opacity: 0.75;
+        transform: rotate(12deg) scale(1.08);
       }
     }
 
-    @keyframes floatParticle {
-      0% {
-        transform: translateY(0px) translateX(0px);
-        opacity: 0.2;
-      }
-      50% {
-        transform: translateY(-12px) translateX(8px);
-        opacity: 0.9;
-      }
-      100% {
-        transform: translateY(-24px) translateX(-4px);
-        opacity: 0;
-      }
-    }
-
-    @keyframes curtainBreatheLeft {
+    @keyframes spotlightGlowRight {
       0%, 100% {
-        transform: translateX(0px) skewY(0deg);
+        opacity: 0.45;
+        transform: rotate(12deg) scale(1);
       }
       50% {
-        transform: translateX(-4px) skewY(-0.8deg);
+        opacity: 0.75;
+        transform: rotate(-12deg) scale(1.08);
       }
     }
 
-    @keyframes curtainBreatheRight {
+    @keyframes curtainBreeze {
       0%, 100% {
-        transform: translateX(0px) skewY(0deg);
+        transform: scaleX(1);
       }
       50% {
-        transform: translateX(4px) skewY(0.8deg);
+        transform: scaleX(1.04) skewY(1deg);
       }
     }
 
-    @keyframes ribbonWave {
-      0%, 100% { transform: scaleY(1); }
-      50% { transform: scaleY(1.04); }
+    @keyframes floatingSparkle {
+      0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+        opacity: 0.6;
+      }
+      50% {
+        transform: translateY(-6px) rotate(15deg);
+        opacity: 1;
+      }
     }
 
-    .anim-spotlight {
-      transform-origin: 300px 30px;
+    .spotlight-left {
+      transform-origin: 30% 0%;
       animation: spotlightGlow 7s ease-in-out infinite;
     }
 
-    .curtain-left {
-      transform-origin: top left;
-      animation: curtainBreatheLeft 6s ease-in-out infinite;
+    .spotlight-right {
+      transform-origin: 70% 0%;
+      animation: spotlightGlowRight 8s ease-in-out infinite;
     }
 
-    .curtain-right {
-      transform-origin: top right;
-      animation: curtainBreatheRight 6s ease-in-out infinite;
+    .curtain-wave {
+      transform-origin: top;
+      animation: curtainBreeze 6s ease-in-out infinite;
     }
 
-    .particle-1 { animation: floatParticle 4.5s ease-in-out infinite; }
-    .particle-2 { animation: floatParticle 5.5s ease-in-out 1.2s infinite; }
-    .particle-3 { animation: floatParticle 3.8s ease-in-out 2.1s infinite; }
-    .particle-4 { animation: floatParticle 6.2s ease-in-out 0.7s infinite; }
+    .sparkle-anim {
+      animation: floatingSparkle 4s ease-in-out infinite;
+    }
 
-    /* Custom toast animation */
+    /* Toast Notification styles */
     #toast {
       transition: opacity 0.3s ease, transform 0.3s ease;
+      pointer-events: none;
     }
-    #toast.toast-show {
+    #toast.show {
       opacity: 1;
-      transform: translate(-50%, 0);
+      transform: translateY(0);
+      pointer-events: auto;
     }
   </style>
 </head>
+<body class="bg-[#faf7f0] text-stone-800 dark:bg-[#121316] dark:text-[#ded8cb] min-h-screen relative flex flex-col justify-between selection:bg-amber-200 selection:text-stone-900 dark:selection:bg-amber-900/60 dark:selection:text-amber-100">
 
-<body class="bg-[#fbf9f4] text-[#22262a] dark:bg-[#0c0f18] dark:text-[#f0f2f5] font-hand transition-colors duration-500 ease-in-out min-h-screen selection:bg-amber-200 dark:selection:bg-amber-900/60 flex flex-col justify-between">
-
-  <header class="w-full max-w-3xl mx-auto px-5 pt-6 pb-2 flex items-center justify-between font-sans text-sm">
-    <div class="flex items-center space-x-2 opacity-80 select-none">
-      <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-500/80 animate-pulse"></span>
-      <span class="text-xs uppercase tracking-widest font-medium opacity-60">Reading Experience</span>
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="flex items-center gap-3">
-      <!-- Share Button -->
-      <button 
-        id="shareBtn" 
-        type="button"
-        aria-label="Share this essay"
-        title="Share"
-        class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-stone-300 dark:border-stone-700 bg-stone-100/80 dark:bg-stone-800/80 hover:bg-stone-200 dark:hover:bg-stone-700/80 text-stone-700 dark:text-stone-300 transition-all duration-200 shadow-sm active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-500/50"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-        </svg>
-        <span class="text-xs font-medium">Share</span>
-      </button>
-
-      <!-- Theme Toggle Button -->
-      <button 
-        id="themeToggleBtn" 
-        type="button"
-        aria-label="Toggle light and dark mode"
-        title="Toggle Theme"
-        class="p-2 rounded-full border border-stone-300 dark:border-stone-700 bg-stone-100/80 dark:bg-stone-800/80 hover:bg-stone-200 dark:hover:bg-stone-700/80 text-stone-700 dark:text-stone-300 transition-all duration-200 shadow-sm active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-500/50"
-      >
-        <!-- Sun Icon (shown in dark mode) -->
-        <svg id="sunIcon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 9H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
-        <!-- Moon Icon (shown in light mode) -->
-        <svg id="moonIcon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-        </svg>
-      </button>
-    </div>
-  </header>
-
-  <main class="w-full max-w-[700px] mx-auto px-6 sm:px-10 py-6 sm:py-10 flex-grow">
-
-    <!-- Light Colorful Animated Stage SVG -->
-    <div class="w-full max-w-[480px] mx-auto mb-6 flex justify-center items-center drop-shadow-sm transition-all duration-500">
-      <svg viewBox="0 0 600 240" class="w-full h-auto overflow-visible" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <!-- Radiant Warm Spotlight Gradients -->
-          <linearGradient id="warmSpotlight" x1="50%" y1="0%" x2="50%" y2="100%">
-            <stop offset="0%" stop-color="#fef3c7" stop-opacity="0.8"/>
-            <stop offset="35%" stop-color="#fed7aa" stop-opacity="0.5"/>
-            <stop offset="70%" stop-color="#fdba74" stop-opacity="0.25"/>
-            <stop offset="100%" stop-color="#fb923c" stop-opacity="0"/>
-          </linearGradient>
-
-          <linearGradient id="coolSpotlight" x1="30%" y1="0%" x2="70%" y2="100%">
-            <stop offset="0%" stop-color="#a5f3fc" stop-opacity="0.7"/>
-            <stop offset="40%" stop-color="#bae6fd" stop-opacity="0.35"/>
-            <stop offset="80%" stop-color="#c4b5fd" stop-opacity="0.15"/>
-            <stop offset="100%" stop-color="#e0e7ff" stop-opacity="0"/>
-          </linearGradient>
-
-          <!-- Colorful Stage Curtains Gradients -->
-          <linearGradient id="curtainVelvetLeft" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#f43f5e"/>
-            <stop offset="45%" stop-color="#e11d48"/>
-            <stop offset="85%" stop-color="#9f1239"/>
-            <stop offset="100%" stop-color="#881337"/>
-          </linearGradient>
-
-          <linearGradient id="curtainVelvetRight" x1="100%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#ec4899"/>
-            <stop offset="50%" stop-color="#db2777"/>
-            <stop offset="85%" stop-color="#9d174d"/>
-            <stop offset="100%" stop-color="#831843"/>
-          </linearGradient>
-
-          <linearGradient id="goldArch" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#f59e0b"/>
-            <stop offset="25%" stop-color="#fde047"/>
-            <stop offset="50%" stop-color="#fbbf24"/>
-            <stop offset="75%" stop-color="#fde047"/>
-            <stop offset="100%" stop-color="#d97706"/>
-          </linearGradient>
-
-          <!-- Subtle Drop Shadow Filter -->
-          <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="8" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-          </filter>
-        </defs>
-
-        <!-- Ambient Glow Backing -->
-        <circle cx="300" cy="115" r="95" fill="#fef08a" opacity="0.3" filter="url(#softGlow)" />
-
-        <!-- Dual Animated Spotlights Cones -->
-        <g class="anim-spotlight">
-          <polygon points="300,10 170,225 430,225" fill="url(#warmSpotlight)" mix-blend-mode="screen" />
-          <polygon points="300,10 215,225 385,225" fill="url(#coolSpotlight)" mix-blend-mode="screen" />
-        </g>
-
-        <!-- Dynamic Floating Atmosphere Particles -->
-        <circle cx="270" cy="140" r="3" fill="#fef08a" class="particle-1" />
-        <circle cx="335" cy="120" r="4.2" fill="#fed7aa" class="particle-2" />
-        <circle cx="295" cy="90" r="2.8" fill="#a7f3d0" class="particle-3" />
-        <circle cx="355" cy="165" r="3.2" fill="#fbcfe8" class="particle-4" />
-        <circle cx="230" cy="155" r="2.5" fill="#fde047" class="particle-2" />
-        <circle cx="370" cy="95" r="3.5" fill="#bae6fd" class="particle-1" />
-
-        <!-- Stage Platform Base -->
-        <ellipse cx="300" cy="225" rx="195" ry="14" fill="#382f2d" opacity="0.15" />
-        <path d="M 120,222 Q 300,234 480,222 L 488,230 Q 300,242 112,230 Z" fill="#d97706" opacity="0.8" />
-        <path d="M 130,220 Q 300,230 470,220" stroke="#fef08a" stroke-width="2" fill="none" opacity="0.75" />
-
-        <!-- Left Curtain Group -->
-        <g class="curtain-left">
-          <!-- Main Left Drape Fold -->
-          <path d="M 85,15 Q 165,25 210,32 Q 170,110 135,215 Q 85,140 85,15 Z" fill="url(#curtainVelvetLeft)" opacity="0.95" />
-          <!-- Inner Shadow / Fold lines -->
-          <path d="M 120,20 Q 155,100 135,215" stroke="#4c0519" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.4" />
-          <path d="M 155,24 Q 180,110 170,210" stroke="#ffe4e6" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.3" />
-          <!-- Swag Tie-back sash -->
-          <path d="M 98,135 Q 130,146 150,135" stroke="#facc15" stroke-width="4.5" fill="none" stroke-linecap="round" />
-          <circle cx="150" cy="135" r="4.5" fill="#eab308" />
-        </g>
-
-        <!-- Right Curtain Group -->
-        <g class="curtain-right">
-          <!-- Main Right Drape Fold -->
-          <path d="M 515,15 Q 435,25 390,32 Q 430,110 465,215 Q 515,140 515,15 Z" fill="url(#curtainVelvetRight)" opacity="0.95" />
-          <!-- Inner Shadow / Fold lines -->
-          <path d="M 480,20 Q 445,100 465,215" stroke="#4c0519" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.4" />
-          <path d="M 445,24 Q 420,110 430,210" stroke="#ffe4e6" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.3" />
-          <!-- Swag Tie-back sash -->
-          <path d="M 502,135 Q 470,146 450,135" stroke="#facc15" stroke-width="4.5" fill="none" stroke-linecap="round" />
-          <circle cx="450" cy="135" r="4.5" fill="#eab308" />
-        </g>
-
-        <!-- Top Ornate Valance / Proscenium Pelmet Arch -->
-        <path d="M 90,16 Q 300,-4 510,16 Q 440,55 380,38 Q 300,60 220,38 Q 160,55 90,16 Z" fill="url(#curtainVelvetLeft)" opacity="0.97" />
-        <!-- Golden Border Trim of Pelmet -->
-        <path d="M 90,18 Q 300,-2 510,18" stroke="url(#goldArch)" stroke-width="4.5" stroke-linecap="round" fill="none" />
-        <path d="M 90,18 Q 160,57 220,40 Q 300,62 380,40 Q 440,57 510,18" stroke="#fde047" stroke-width="2.5" fill="none" opacity="0.9" />
-
-        <!-- Center Proscenium Golden Star / Emblem -->
-        <polygon points="300,20 304,30 315,30 306,37 309,47 300,41 291,47 294,37 285,30 296,30" fill="#fef08a" stroke="#d97706" stroke-width="1" />
-
-        <!-- Overhead Mini Stage Light Fixture -->
-        <rect x="282" y="4" width="36" height="8" rx="3" fill="#475569" />
-        <circle cx="292" cy="11" r="3.5" fill="#38bdf8" />
-        <circle cx="308" cy="11" r="3.5" fill="#f472b6" />
+  <div class="fixed top-4 right-4 sm:top-6 sm:right-6 z-50 flex items-center gap-2 bg-white/80 dark:bg-stone-900/80 backdrop-blur-md p-1.5 rounded-full border border-stone-200/80 dark:border-stone-700/80 shadow-sm transition-all duration-300">
+    <!-- Share Button -->
+    <button id="shareButton" type="button" aria-label="Share" title="Share" class="w-10 h-10 rounded-full flex items-center justify-center text-stone-700 hover:text-stone-950 dark:text-stone-300 dark:hover:text-white hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500/50">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <circle cx="18" cy="5" r="3"></circle>
+        <circle cx="6" cy="12" r="3"></circle>
+        <circle cx="18" cy="19" r="3"></circle>
+        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
       </svg>
+    </button>
+
+    <!-- Theme Toggle Button -->
+    <button id="themeToggle" type="button" aria-label="Toggle Theme" title="Toggle Theme" class="w-10 h-10 rounded-full flex items-center justify-center text-stone-700 hover:text-stone-950 dark:text-stone-300 dark:hover:text-white hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500/50">
+      <!-- Sun Icon (visible in dark) -->
+      <svg id="sunIcon" class="w-5 h-5 hidden dark:block text-amber-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line>
+        <line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+      </svg>
+      <!-- Moon Icon (visible in light) -->
+      <svg id="moonIcon" class="w-5 h-5 block dark:hidden text-stone-700" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Main Article Container -->
+  <main class="w-full max-w-3xl mx-auto px-5 sm:px-8 md:px-12 py-12 sm:py-16">
+
+    <div class="w-full flex justify-center mb-6 sm:mb-8">
+      <div class="w-full max-w-sm sm:max-w-md h-44 sm:h-52 select-none relative overflow-hidden rounded-2xl bg-gradient-to-b from-amber-50/70 via-rose-50/40 to-sky-50/50 dark:from-stone-900 dark:via-stone-900/90 dark:to-stone-950 p-2 border border-amber-200/50 dark:border-stone-800 shadow-sm flex items-center justify-center">
+        <svg viewBox="0 0 460 220" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <!-- Light theater gradients -->
+            <radialGradient id="lightBeamL" cx="20%" cy="0%" r="90%">
+              <stop offset="0%" stop-color="#fef08a" stop-opacity="0.8"/>
+              <stop offset="45%" stop-color="#fdba74" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#fb7185" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="lightBeamR" cx="80%" cy="0%" r="90%">
+              <stop offset="0%" stop-color="#93c5fd" stop-opacity="0.75"/>
+              <stop offset="50%" stop-color="#c084fc" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#f43f5e" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="stageFloor" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.6"/>
+              <stop offset="60%" stop-color="#f59e0b" stop-opacity="0.75"/>
+              <stop offset="100%" stop-color="#d97706" stop-opacity="0.9"/>
+            </linearGradient>
+            <linearGradient id="curtainLeftGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#f43f5e"/>
+              <stop offset="35%" stop-color="#fb7185"/>
+              <stop offset="70%" stop-color="#e11d48"/>
+              <stop offset="100%" stop-color="#9f1239"/>
+            </linearGradient>
+            <linearGradient id="curtainRightGrad" x1="100%" y1="0%" x2="0%" y2="0%">
+              <stop offset="0%" stop-color="#f43f5e"/>
+              <stop offset="35%" stop-color="#fb7185"/>
+              <stop offset="70%" stop-color="#e11d48"/>
+              <stop offset="100%" stop-color="#9f1239"/>
+            </linearGradient>
+            <linearGradient id="pelmetGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#9f1239"/>
+              <stop offset="50%" stop-color="#f43f5e"/>
+              <stop offset="100%" stop-color="#9f1239"/>
+            </linearGradient>
+            <linearGradient id="goldGleam" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#fef08a"/>
+              <stop offset="50%" stop-color="#f59e0b"/>
+              <stop offset="100%" stop-color="#d97706"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Backstage background glow -->
+          <ellipse cx="230" cy="115" rx="140" ry="85" fill="#fde68a" opacity="0.32" />
+
+          <!-- Dynamic Spotlight Beams -->
+          <polygon points="60,-10 20,200 240,200 90,-10" fill="url(#lightBeamL)" class="spotlight-left" />
+          <polygon points="400,-10 220,200 440,200 370,-10" fill="url(#lightBeamR)" class="spotlight-right" />
+
+          <!-- Stage Floor Platform -->
+          <path d="M 40 185 L 420 185 L 445 215 L 15 215 Z" fill="url(#stageFloor)"/>
+          <line x1="15" y1="185" x2="445" y2="185" stroke="#fef08a" stroke-width="2.5" opacity="0.9" />
+
+          <!-- Stage Front Lights (Footlights) -->
+          <circle cx="90" cy="186" r="3" fill="#fef08a" opacity="0.9"/>
+          <circle cx="140" cy="186" r="3" fill="#fed7aa" opacity="0.9"/>
+          <circle cx="190" cy="186" r="3.5" fill="#fef08a" opacity="0.95"/>
+          <circle cx="230" cy="186" r="4" fill="#ffffff" opacity="1"/>
+          <circle cx="270" cy="186" r="3.5" fill="#fef08a" opacity="0.95"/>
+          <circle cx="320" cy="186" r="3" fill="#fed7aa" opacity="0.9"/>
+          <circle cx="370" cy="186" r="3" fill="#fef08a" opacity="0.9"/>
+
+          <!-- Theater Drapery: Left & Right Open Curtains -->
+          <g class="curtain-wave">
+            <!-- Left draped swag -->
+            <path d="M 0 0 L 115 0 C 105 55 90 95 65 145 C 50 175 25 190 0 195 Z" fill="url(#curtainLeftGrad)"/>
+            <!-- Left gold rope tie -->
+            <path d="M 45 130 C 55 133 65 136 70 142" stroke="url(#goldGleam)" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+            <circle cx="68" cy="144" r="3.5" fill="#fbbf24"/>
+
+            <!-- Right draped swag -->
+            <path d="M 460 0 L 345 0 C 355 55 370 95 395 145 C 410 175 435 190 460 195 Z" fill="url(#curtainRightGrad)"/>
+            <!-- Right gold rope tie -->
+            <path d="M 415 130 C 405 133 395 136 390 142" stroke="url(#goldGleam)" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+            <circle cx="392" cy="144" r="3.5" fill="#fbbf24"/>
+
+            <!-- Top Swag/Valance Border -->
+            <path d="M 0 0 L 460 0 L 460 30 C 390 44 320 20 230 40 C 140 20 70 44 0 30 Z" fill="url(#pelmetGrad)"/>
+            <path d="M 0 30 C 70 44 140 20 230 40 C 320 20 390 44 460 30" stroke="url(#goldGleam)" stroke-width="3" fill="none" opacity="0.95"/>
+          </g>
+
+          <!-- Stage Center Elements: Floating Sparkles & Drama Masks Concept -->
+          <!-- Comedy Mask representation (subtle colorful stage emblem) -->
+          <g transform="translate(195, 95) scale(0.75)" opacity="0.95">
+            <path d="M 12 0 C 28 0 42 12 42 30 C 42 46 28 58 12 58 C -4 58 -18 46 -18 30 C -18 12 -4 0 12 0 Z" fill="#fef08a" stroke="#d97706" stroke-width="2.5"/>
+            <ellipse cx="4" cy="22" rx="3.5" ry="5.5" fill="#78350f"/>
+            <ellipse cx="20" cy="22" rx="3.5" ry="5.5" fill="#78350f"/>
+            <path d="M 2 38 Q 12 50 22 38" stroke="#78350f" stroke-width="3" stroke-linecap="round" fill="none"/>
+          </g>
+
+          <!-- Tragedy Mask representation -->
+          <g transform="translate(245, 98) scale(0.75)" opacity="0.95">
+            <path d="M 12 0 C 28 0 42 12 42 30 C 42 46 28 58 12 58 C -4 58 -18 46 -18 30 C -18 12 -4 0 12 0 Z" fill="#bae6fd" stroke="#0284c7" stroke-width="2.5"/>
+            <ellipse cx="4" cy="24" rx="3.5" ry="5" fill="#0c4a6e"/>
+            <ellipse cx="20" cy="24" rx="3.5" ry="5" fill="#0c4a6e"/>
+            <path d="M 3 46 Q 12 36 21 46" stroke="#0c4a6e" stroke-width="3" stroke-linecap="round" fill="none"/>
+          </g>
+
+          <!-- Colorful Sparkles / Stars -->
+          <g class="sparkle-anim">
+            <path d="M 230 45 L 233 55 L 243 57 L 234 62 L 236 71 L 229 65 L 221 69 L 224 61 L 217 56 L 226 55 Z" fill="#fde047" opacity="0.95"/>
+            <circle cx="160" cy="85" r="3" fill="#a7f3d0" opacity="0.85"/>
+            <circle cx="300" cy="80" r="3.5" fill="#fbcfe8" opacity="0.85"/>
+            <circle cx="178" cy="140" r="2.5" fill="#fde68a" opacity="0.9"/>
+            <circle cx="282" cy="145" r="2.5" fill="#c7d2fe" opacity="0.9"/>
+          </g>
+        </svg>
+      </div>
     </div>
 
-    <!-- Title of Document (Centered) -->
-    <h1 class="centered-element text-4xl sm:text-5xl md:text-6xl font-semibold tracking-wide text-amber-900 dark:text-amber-300/90 mb-10 sm:mb-12 select-none">
+    <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-8 text-stone-900 dark:text-amber-100 tracking-wide">
       A Stage
     </h1>
 
-    <div class="prose-content text-xl sm:text-2xl md:text-[1.65rem] space-y-6 sm:space-y-7 leading-relaxed font-normal">
+    <article class="text-lg sm:text-xl md:text-2xl leading-relaxed sm:leading-loose text-stone-800 dark:text-stone-200 space-y-6 sm:space-y-8 font-normal">
 
-      <p>
+      <p class="body-content-justified">
         Life in the entire universe is like an ever-continuous stage performance. Always live. Happening. This vast ‘stage’ is subdivided into so many small stages. These can be broadly classified as entire humanity &gt; nations &gt; towns &gt; communities &gt; homes &gt; families…
       </p>
 
-      <p>
+      <p class="body-content-justified">
         On each such ‘stage’, every performance is a live performance. Impromptu. Unrehearsed. In fact, rehearsal is NOT possible. The actors thereupon continue to, rather have to perform from the moment they enter into their respective role till the time they exit.
       </p>
 
-      <p>
+      <p class="body-content-justified">
         The irony is - any individual actor simply cannot decide on his/her respective entry or exit timing. Not only that it is also not possible to choose the stage, co-actors, supporting actors, unknown actors, everything else and their respective acts, roles and performances; nothing. Whatever it is, it is.
       </p>
 
-      <p>
+      <p class="body-content-justified">
         Here, every individual actor has to act, no choice; because ultimately this entire ‘universal life stage’ is on an ever-running belt called TIME. Always moving ahead. Thus, an act once performed is performed. No backward correction is ever possible.
       </p>
 
-      <!-- Centered Floral Divider -->
-      <div class="centered-element py-3 sm:py-4 text-2xl sm:text-3xl text-amber-700/80 dark:text-amber-400/80 tracking-[0.35em] select-none">
+      <p class="body-content-centered text-amber-700/80 dark:text-amber-400/80 text-xl sm:text-2xl tracking-widest my-4">
         ❁❁❁
-      </div>
+      </p>
 
-      <p>
+      <p class="body-content-centered font-medium text-stone-900 dark:text-stone-100">
         All the above may sound depressing. But it is not that ruthless.
       </p>
 
-      <!-- Centered Floral Divider -->
-      <div class="centered-element py-3 sm:py-4 text-2xl sm:text-3xl text-amber-700/80 dark:text-amber-400/80 tracking-[0.35em] select-none">
+      <p class="body-content-centered text-amber-700/80 dark:text-amber-400/80 text-xl sm:text-2xl tracking-widest my-4">
         ❁❁❁
-      </div>
-
-      <p>
-        If, during the course of play, any individual actor identifies, realises and understands ‘what’ went wrong for him/her, then he/she can do some ‘conscious fine tuning’ whenever, in future, the role demands to act in somewhat similar circumstances. This may also be deciding 'not to act at all' at that point of time. The earlier the understanding is, the better it is.
       </p>
 
-      <p>
-        So, the only thing that is in the hand of the individual actor to keep his/her own performance as easy-going and stress free as possible is ‘awareness’. Because on this ever-moving-forward-in-time stage, only an aware actor can make ‘suo-motu’ corrections in his/her role-play based on OWN experiences that are gathered by just ‘being aware’. Again, all this can be done ONLY for the role-playing of self. Not for others.
+      <p class="body-content-justified">
+        If, during the course of play, any individual actor identifies, realises and understands ‘what’ went wrong for him/her, then he/she can do some ‘conscious fine tuning’ whenever, in future, the role demands to act in somewhat similar circumstances. This may also be deciding not to act at all, at that point of time. The earlier the understanding is, the better it is.
       </p>
 
-      <p>
+      <p class="body-content-justified">
+        So, the only thing that is in the hand of the individual actor to keep his/her own performance as easy-going and stress free as possible is ‘awareness’. Because on this ever-moving-forward-in-time stage, only an aware actor can make ‘Suo-motu’ corrections in his/her role-play based on OWN experiences that are gathered by just ‘being aware’. Again, all this can be done ONLY for the role-playing of self. Not for others.
+      </p>
+
+      <p class="body-content-justified">
         So, it is the ‘self-awareness’ that matters. And the easiest way to increase it is to adhere to ‘healthy habits’ as wholeheartedly as one can.
       </p>
 
-      <!-- Centered Author & Date line -->
-      <div class="centered-element pt-5 pb-1 text-xl sm:text-2xl md:text-[1.65rem] font-medium tracking-wide text-stone-800 dark:text-stone-300">
-        Jaydeep | 20240308
-      </div>
+      <p class="body-content-centered tracking-wider pt-2 text-stone-600 dark:text-stone-400">
+        20240308
+      </p>
 
-      <!-- Final Centered Floral Divider -->
-      <div class="centered-element py-3 sm:py-4 text-2xl sm:text-3xl text-amber-700/80 dark:text-amber-400/80 tracking-[0.35em] select-none">
+      <p class="body-content-centered text-amber-700/80 dark:text-amber-400/80 text-xl sm:text-2xl tracking-widest my-4">
         ❁❁❁
-      </div>
+      </p>
 
-    </div>
-
+    </article>
   </main>
 
-  <div class="py-8"></div>
-
-  <!-- Notification Toast (Non-intrusive alert replacement) -->
-  <div 
-    id="toast" 
-    class="fixed bottom-6 left-1/2 -translate-x-1/2 translate-y-4 opacity-0 pointer-events-none z-50 px-4 py-2 rounded-full font-sans text-xs sm:text-sm font-medium bg-stone-900 text-stone-100 dark:bg-stone-100 dark:text-stone-900 shadow-xl transition-all duration-300 flex items-center gap-2"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-amber-400 dark:text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-    </svg>
-    <span id="toastMsg">Link copied to clipboard</span>
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-stone-900/90 text-stone-100 dark:bg-stone-100/95 dark:text-stone-900 px-5 py-2.5 rounded-full text-base sm:text-lg font-medium shadow-lg opacity-0 -translate-y-2 pointer-events-none transition-all duration-300 z-50">
+    Link copied to clipboard
   </div>
 
   <script>
-    (function initInteractiveFeatures() {
-      // 1. Theme Management (defaults to system preference or previously saved preference)
-      const themeToggleBtn = document.getElementById('themeToggleBtn');
-      const sunIcon = document.getElementById('sunIcon');
-      const moonIcon = document.getElementById('moonIcon');
+    // Theme toggle handling
+    const htmlElem = document.documentElement;
+    const themeToggleBtn = document.getElementById('themeToggle');
 
-      function getPreferredTheme() {
-        const storedTheme = localStorage.getItem('theme');
-        if (storedTheme) {
-          return storedTheme;
-        }
-        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    // Check system preference or localStorage
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      htmlElem.classList.add('dark');
+      htmlElem.classList.remove('light');
+    } else {
+      htmlElem.classList.remove('dark');
+      htmlElem.classList.add('light');
+    }
+
+    themeToggleBtn.addEventListener('click', () => {
+      if (htmlElem.classList.contains('dark')) {
+        htmlElem.classList.remove('dark');
+        htmlElem.classList.add('light');
+        localStorage.setItem('theme', 'light');
+      } else {
+        htmlElem.classList.add('dark');
+        htmlElem.classList.remove('light');
+        localStorage.setItem('theme', 'dark');
       }
+    });
 
-      function applyTheme(theme) {
-        if (theme === 'dark') {
-          document.documentElement.classList.add('dark');
-          sunIcon.classList.remove('hidden');
-          moonIcon.classList.add('hidden');
-        } else {
-          document.documentElement.classList.remove('dark');
-          sunIcon.classList.add('hidden');
-          moonIcon.classList.remove('hidden');
-        }
-        localStorage.setItem('theme', theme);
+    // Share functionality
+    const shareBtn = document.getElementById('shareButton');
+    const toast = document.getElementById('toast');
+
+    function showNotification(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }
+
+    function copyCurrentUrl() {
+      try {
+        const tempInput = document.createElement('input');
+        tempInput.value = window.location.href;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+        showNotification('Link copied to clipboard');
+      } catch (err) {
+        showNotification('Unable to copy link');
       }
+    }
 
-      // Initial theme setup
-      applyTheme(getPreferredTheme());
-
-      // Theme toggle click handler
-      themeToggleBtn.addEventListener('click', () => {
-        const isDark = document.documentElement.classList.contains('dark');
-        applyTheme(isDark ? 'light' : 'dark');
-      });
-
-      // 2. Toast notification helper
-      let toastTimer = null;
-      function showToast(message) {
-        const toast = document.getElementById('toast');
-        const toastMsg = document.getElementById('toastMsg');
-        
-        toastMsg.textContent = message;
-        toast.classList.add('toast-show');
-        toast.classList.remove('translate-y-4', 'opacity-0');
-
-        if (toastTimer) clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => {
-          toast.classList.remove('toast-show');
-          toast.classList.add('translate-y-4', 'opacity-0');
-        }, 2800);
-      }
-
-      // 3. Share functionality
-      const shareBtn = document.getElementById('shareBtn');
-      shareBtn.addEventListener('click', async () => {
-        const shareData = {
-          title: 'A Stage - Jaydeep',
-          text: 'Life in the entire universe is like an ever-continuous stage performance.',
-          url: window.location.href
-        };
-
-        if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
-          try {
-            await navigator.share(shareData);
-            return;
-          } catch (err) {
-            // User aborted or unallowed; fall through to clipboard copy
-            if (err.name === 'AbortError') return;
-          }
-        }
-
-        // Fallback: Copy link using standard execCommand clipboard technique
+    shareBtn.addEventListener('click', async () => {
+      if (navigator.share) {
         try {
-          const tempInput = document.createElement('input');
-          tempInput.value = window.location.href;
-          tempInput.style.position = 'fixed';
-          tempInput.style.left = '-9999px';
-          tempInput.style.top = '0';
-          document.body.appendChild(tempInput);
-          tempInput.focus();
-          tempInput.select();
-          const successful = document.execCommand('copy');
-          document.body.removeChild(tempInput);
-
-          if (successful) {
-            showToast('Link copied to clipboard!');
-          } else {
-            showToast('Unable to copy link.');
+          await navigator.share({
+            title: 'A Stage',
+            text: 'Life in the entire universe is like an ever-continuous stage performance.',
+            url: window.location.href,
+          });
+        } catch (err) {
+          if (err.name !== 'AbortError') {
+            copyCurrentUrl();
           }
-        } catch (e) {
-          showToast('Sharing not supported on this device.');
         }
-      });
-    })();
+      } else {
+        copyCurrentUrl();
+      }
+    });
   </script>
 </body>
 </html>
